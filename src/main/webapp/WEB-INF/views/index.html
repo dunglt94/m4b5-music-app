@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>Song List</h3>
+<form th:action="@{/songs/search}" method="get">
+    <div>
+        <label><input type="search" id="search" name="name" placeholder="Enter song name" required></label>
+        <button type="submit">Search</button>
+    </div>
+</form>
+<p>
+    <a th:href="@{/songs/create}">
+        Add new song
+    </a>
+</p>
+<div class="notify">
+    <div th:if="${success}" style="margin-bottom: 5px;">
+        <span th:text="${success}"></span>
+    </div>
+</div>
+<table id="songs">
+    <thead>
+    <tr>
+        <th>STT</th>
+        <th>Title</th>
+        <th>Singer</th>
+        <th>Category</th>
+        <th>Song</th>
+        <th colspan="2">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="song, stat:${songs}" th:class="${stat.odd}?'odd':'even'">
+        <td th:text="${stat.count}"></td>
+        <td>
+            <a th:href="@{/songs/{id}/view(id=${song.id})}" th:text="${song.title}"></a>
+        </td>
+        <td th:text="${song.singer}"></td>
+        <td th:text="${song.category}"></td>
+        <td>
+            <audio controls>
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/ogg">
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/mp3">
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/mp4">
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </td>
+        <td>
+            <a th:href="@{/songs/{id}/edit(id=${song.id})}">Edit</a>
+        </td>
+        <td>
+            <a th:href="@{/songs/{id}/delete(id=${song.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<footer th:insert="/layout :: footer"></footer>
+</body>
+</html>

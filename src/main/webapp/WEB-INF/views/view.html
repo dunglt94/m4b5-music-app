@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout :: head">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>Song Details</h3>
+<p>
+    <a th:href="@{/songs}">
+        Back to song list
+    </a>
+</p>
+<table id="songs" style="width: 40%">
+    <thead>
+    <tr>
+        <th colspan="2">Song details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>ID: </td>
+        <td th:text="${song.id}"></td>
+    </tr>
+    <tr>
+        <td>Title: </td>
+        <td th:text="${song.title}"></td>
+    </tr>
+    <tr>
+        <td>Singer: </td>
+        <td th:text="${song.singer}"></td>
+    </tr>
+    <tr>
+        <td>Manufacturer: </td>
+        <td th:text="${song.category}"></td>
+    </tr>
+    <tr>
+        <td>Song</td>
+        <td>
+            <audio controls>
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/ogg">
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/mp3">
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/mp4">
+                <source th:src="@{'\music\\' + ${song.file}}" type="audio/wav">
+                Your browser does not support the audio element.
+            </audio>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
