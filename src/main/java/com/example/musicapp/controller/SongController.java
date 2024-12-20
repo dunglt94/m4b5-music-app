@@ -22,6 +22,7 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/songs")
 public class SongController {
+
     @Autowired
     private ISongService songService;
 
@@ -41,8 +42,24 @@ public class SongController {
     }
 
     @PostMapping("/save")
-    public String saveSong(SongForm songForm) {
-        Song song = uploadFile(songForm);;
+    public String saveSong(SongForm songForm, RedirectAttributes redirectAttributes) {
+        MultipartFile multipartFile = songForm.getFile();
+        String fileName = multipartFile.getOriginalFilename();
+        if (fileName == null || !isAllowedFileType(fileName)) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Invalid file type! Only accept: .mp3, .wav, .ogg, .mp4");
+            return "redirect:/songs/create";
+        }
+        try {
+            FileCopyUtils.copy(multipartFile.getBytes(), new File(fileUpload + fileName)) ;
+        } catch (IOException e) {
+            //noinspection CallToPrintStackTrace
+            e.printStackTrace();
+        }
+        Song song = new Song(songForm.getId(), songForm.getTitle(), songForm.getSinger(),
+                songForm.getCategory(), fileName);
+
+
         songService.save(song);
         return "redirect:/songs";
     }
@@ -92,5 +109,18 @@ public class SongController {
         songService.delete(id);
         redirectAttributes.addFlashAttribute("success", "Song deleted successfully");
         return "redirect:/songs";
+    }
+
+    private boolean isAllowedFileType(String fileName) {
+        String[] acceptedExtensions = {".mp3", ".wav", ".ogg", ".mp4"};
+        String extension = fileName.substring(fileName.lastIndexOf("."));
+        boolean accepted = false;
+        for (String ext : acceptedExtensions) {
+            if (extension.equals(ext)) {
+                accepted = true;
+                break;
+            }
+        }
+        return accepted;
     }
 }

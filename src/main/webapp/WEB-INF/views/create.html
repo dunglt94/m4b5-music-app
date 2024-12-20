@@ -30,6 +30,11 @@
         <div>
             <label for="audio">Song file</label>
             <input type="file" id="audio" th:field="*{file}"/>
+            <div class="error">
+                <div th:if="${error}">
+                    <span th:text="${error}"></span>
+                </div>
+            </div>
         </div>
         <input type="submit" value="Save"/>
     </form>
